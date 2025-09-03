@@ -9,13 +9,6 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# Redirects para SPA (caso precise)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin"]}
-
 # Headers de segurança
 [[headers]]
   for = "/*"
