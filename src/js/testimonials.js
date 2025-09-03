@@ -40,28 +40,44 @@ class TestimonialsManager {
     async loadTestimonials() {
         try {
             console.log('TestimonialsManager: Carregando depoimentos...');
-            // Tentar carregar da API Netlify primeiro
+            
+            // Detectar se estamos em produção (Netlify) ou desenvolvimento
+            const isProduction = window.location.hostname !== 'localhost' && 
+                                window.location.hostname !== '127.0.0.1' && 
+                                !window.location.hostname.includes('127.0.0.1');
+            
             let data = null;
-            try {
-                console.log('TestimonialsManager: Tentando carregar da API Netlify...');
-                const apiResponse = await fetch('/.netlify/functions/testimonials');
-                if (apiResponse.ok) {
-                    data = await apiResponse.json();
-                    console.log('Depoimentos carregados da API Netlify:', data);
+            
+            // Só tentar API Netlify se estivermos em produção
+            if (isProduction) {
+                try {
+                    console.log('TestimonialsManager: Tentando carregar da API Netlify...');
+                    const apiResponse = await fetch('/.netlify/functions/testimonials');
+                    if (apiResponse.ok) {
+                        data = await apiResponse.json();
+                        console.log('Depoimentos carregados da API Netlify:', data);
+                    }
+                } catch (apiError) {
+                    console.log('API Netlify não disponível:', apiError.message);
                 }
-            } catch (apiError) {
-                console.log('API Netlify não disponível, tentando arquivo JSON:', apiError);
+            } else {
+                console.log('TestimonialsManager: Ambiente local detectado, pulando API Netlify');
             }
 
-            // Se API não funcionar, carregar do arquivo JSON
+            // Se API não funcionar ou estivermos em desenvolvimento, carregar do arquivo JSON
             if (!data) {
-                console.log('TestimonialsManager: Carregando do arquivo JSON...');
-                const response = await fetch('comments.json');
-                if (response.ok) {
-                    data = await response.json();
-                    console.log('Depoimentos carregados do arquivo JSON:', data);
-                } else {
-                    throw new Error('Não foi possível carregar comments.json');
+                try {
+                    console.log('TestimonialsManager: Carregando do arquivo JSON...');
+                    const response = await fetch('./comments.json');
+                    if (response.ok) {
+                        data = await response.json();
+                        console.log('Depoimentos carregados do arquivo JSON:', data);
+                    } else {
+                        throw new Error(`Erro ao carregar comments.json: ${response.status}`);
+                    }
+                } catch (jsonError) {
+                    console.log('Erro ao carregar JSON:', jsonError.message);
+                    throw jsonError;
                 }
             }
 
@@ -107,7 +123,7 @@ class TestimonialsManager {
             {
                 id: 1,
                 name: "Maria Silva",
-                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+                avatar: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%231abc9c'/><text x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='white'>M</text></svg>",
                 rating: 5,
                 comment: "Em 6 meses perdi 15kg e ganhei muito mais disposição. O Lorenski é um profissional excepcional!",
                 result: "Perdeu 15kg em 6 meses",
@@ -117,7 +133,7 @@ class TestimonialsManager {
             {
                 id: 2,
                 name: "João Santos",
-                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+                avatar: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%232c5aa0'/><text x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='white'>J</text></svg>",
                 rating: 5,
                 comment: "Nunca imaginei que conseguiria ganhar massa muscular. O treino e a dieta foram fundamentais!",
                 result: "Ganhou 8kg de massa muscular",
@@ -127,7 +143,7 @@ class TestimonialsManager {
             {
                 id: 3,
                 name: "Ana Costa",
-                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+                avatar: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%2328a745'/><text x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='white'>A</text></svg>",
                 rating: 5,
                 comment: "Método incrível! Consegui melhorar minha saúde e autoestima. Recomendo para todos!",
                 result: "Transformação completa",
@@ -226,13 +242,16 @@ class TestimonialsManager {
 
         const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
         const formattedDate = new Date(testimonial.date).toLocaleDateString('pt-BR');
+        
+        // Avatar com fallback melhorado
+        const avatarUrl = testimonial.avatar || `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%23ddd'/><text x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%23999'>${testimonial.name.charAt(0)}</text></svg>`;
 
         card.innerHTML = `
             <div class="testimonial-header">
-                <img src="${testimonial.avatar || 'https://via.placeholder.com/50'}" 
+                <img src="${avatarUrl}" 
                      alt="${testimonial.name}" 
                      class="testimonial-avatar"
-                     onerror="this.src='https://via.placeholder.com/50'">
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'50\\' height=\\'50\\' viewBox=\\'0 0 50 50\\'><rect width=\\'50\\' height=\\'50\\' fill=\\'%23ddd\\'/><text x=\\'50%25\\' y=\\'50%25\\' font-size=\\'16\\' text-anchor=\\'middle\\' dy=\\'.3em\\' fill=\\'%23999\\'>${testimonial.name.charAt(0)}</text></svg>'">
                 <div class="testimonial-info">
                     <h4>${testimonial.name}</h4>
                     <div class="testimonial-date">${formattedDate}</div>
@@ -387,13 +406,15 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         console.log('Auto-inicializando TestimonialsManager...');
         if (document.getElementById('testimonialsGrid')) {
-            window.testimonialsManager = new TestimonialsManager();
-            console.log('TestimonialsManager inicializado automaticamente!');
+            if (!window.testimonialsManager) {
+                window.testimonialsManager = new TestimonialsManager();
+                console.log('TestimonialsManager inicializado automaticamente!');
+            }
         } else {
             console.log('Elemento testimonialsGrid não encontrado, aguardando...');
             // Tentar novamente após mais tempo
             setTimeout(() => {
-                if (document.getElementById('testimonialsGrid')) {
+                if (document.getElementById('testimonialsGrid') && !window.testimonialsManager) {
                     window.testimonialsManager = new TestimonialsManager();
                     console.log('TestimonialsManager inicializado com delay!');
                 }
@@ -402,17 +423,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
 });
 
-// Inicializar o sistema quando a página carregar
-document.addEventListener('DOMContentLoaded', () => {
-    // Aguardar um pouco para garantir que todos os elementos foram carregados
-    setTimeout(() => {
-        window.testimonialsManager = new TestimonialsManager();
-    }, 500);
-});
-
-// Verificar por novos depoimentos a cada 30 segundos
-setInterval(() => {
-    if (window.testimonialsManager) {
-        window.testimonialsManager.reload();
-    }
-}, 30000);
+// Verificar por novos depoimentos apenas em produção e com menor frequência
+if (window.location.hostname !== 'localhost' && 
+    window.location.hostname !== '127.0.0.1' && 
+    !window.location.hostname.includes('127.0.0.1')) {
+    setInterval(() => {
+        if (window.testimonialsManager) {
+            console.log('Recarregando depoimentos...');
+            window.testimonialsManager.reload();
+        }
+    }, 120000); // A cada 2 minutos ao invés de 30 segundos
+}

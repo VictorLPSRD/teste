@@ -9,15 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initMobileMenu();
     addResponsiveFeatures();
     
-    // Initialize testimonials with delay to ensure all elements are loaded
-    setTimeout(() => {
-        console.log('Inicializando TestimonialsManager...');
-        if (typeof TestimonialsManager !== 'undefined') {
-            window.testimonialsManager = new TestimonialsManager();
-        } else {
-            console.error('TestimonialsManager não encontrado!');
-        }
-    }, 100);
+    // Note: TestimonialsManager é inicializado pelo próprio testimonials.js
 });
 
 // Navbar functionality
