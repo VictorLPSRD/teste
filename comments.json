@@ -1,0 +1,65 @@
+{
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Maria Silva",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+      "rating": 5,
+      "comment": "Em 6 meses perdi 15kg e ganhei muito mais disposição. O Lorenski é um profissional excepcional!",
+      "result": "Perdeu 15kg em 6 meses",
+      "date": "2025-08-15",
+      "approved": true
+    },
+    {
+      "id": 2,
+      "name": "João Santos",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+      "rating": 5,
+      "comment": "Nunca imaginei que conseguiria ganhar massa muscular. O treino e a dieta foram fundamentais!",
+      "result": "Ganhou 8kg de massa muscular",
+      "date": "2025-08-20",
+      "approved": true
+    },
+    {
+      "id": 3,
+      "name": "Ana Costa",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+      "rating": 5,
+      "comment": "Método incrível! Consegui melhorar minha saúde e autoestima. Recomendo para todos!",
+      "result": "Transformação completa",
+      "date": "2025-08-25",
+      "approved": true
+    },
+    {
+      "id": 4,
+      "name": "Carlos Mendes",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+      "rating": 5,
+      "comment": "Profissional excepcional! Me ajudou não só com o treino, mas também com a alimentação. Resultados incríveis!",
+      "result": "Perdeu 20kg e ganhou massa",
+      "date": "2025-08-30",
+      "approved": true
+    },
+    {
+      "id": 5,
+      "name": "Fernanda Lima",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+      "rating": 5,
+      "comment": "Acompanhamento personalizado que fez toda diferença. Super recomendo o trabalho do Lorenski!",
+      "result": "Melhorou condicionamento físico",
+      "date": "2025-09-01",
+      "approved": true
+    },
+    {
+      "id": 6,
+      "name": "Ricardo Oliveira",
+      "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face",
+      "rating": 5,
+      "comment": "Treinos eficientes e dieta balanceada. Consegui os resultados que tanto queria!",
+      "result": "Definição muscular",
+      "date": "2025-09-02",
+      "approved": true
+    }
+  ],
+  "pending_testimonials": []
+}

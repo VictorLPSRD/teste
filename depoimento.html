@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Deixe seu Depoimento - Treinado Lorenski</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .testimonial-form-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2c5aa0 0%, #28a745 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .testimonial-form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            animation: slideInUp 0.8s ease;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            color: #2c5aa0;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .rating-input {
+            margin: 1.5rem 0;
+        }
+
+        .rating-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #2c5aa0, #28a745);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(44, 90, 160, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-link a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #28a745;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-form-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .form-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="testimonial-form-page">
+        <div class="testimonial-form-container">
+            <div class="form-header">
+                <h1><i class="fas fa-heart"></i> Deixe seu Depoimento</h1>
+                <p>Compartilhe sua experiência e ajude outras pessoas a conhecer nosso trabalho!</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Seu depoimento foi enviado com sucesso! Obrigado por compartilhar sua experiência.
+            </div>
+
+            <div class="success-message error" id="errorMessage" style="background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; display: none;">
+                <i class="fas fa-exclamation-triangle"></i> <span id="errorText"></span>
+            </div>
+
+            <form id="testimonialForm">
+                <div class="rating-input">
+                    <label>Como você avalia nosso trabalho?</label>
+                    <div class="star-rating" id="starRating">
+                        <i class="fas fa-star star" data-rating="1"></i>
+                        <i class="fas fa-star star" data-rating="2"></i>
+                        <i class="fas fa-star star" data-rating="3"></i>
+                        <i class="fas fa-star star" data-rating="4"></i>
+                        <i class="fas fa-star star" data-rating="5"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientName">Seu Nome *</label>
+                    <input type="text" id="clientName" name="name" required placeholder="Digite seu nome completo">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientEmail">Seu E-mail *</label>
+                    <input type="email" id="clientEmail" name="email" required placeholder="seu@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="resultAchieved">Resultado Alcançado</label>
+                    <input type="text" id="resultAchieved" name="result" placeholder="Ex: Perdeu 10kg, Ganhou massa muscular, etc.">
+                </div>
+
+                <div class="form-group">
+                    <label for="testimonialText">Seu Depoimento *</label>
+                    <textarea id="testimonialText" name="comment" required placeholder="Conte sobre sua experiência, os resultados alcançados e como nosso trabalho ajudou você..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Enviar Depoimento
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="index.html">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Site
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rating system
+        let selectedRating = 0;
+        const stars = document.querySelectorAll('.star');
+        const form = document.getElementById('testimonialForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.dataset.rating);
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', function() {
+                const hoverRating = parseInt(this.dataset.rating);
+                highlightStars(hoverRating);
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', function() {
+            updateStars();
+        });
+
+        function updateStars() {
+            stars.forEach((star, index) => {
+                if (index < selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function highlightStars(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (selectedRating === 0) {
+                alert('Por favor, selecione uma avaliação com estrelas.');
+                return;
+            }
+
+            const formData = new FormData(form);
+            const testimonialData = {
+                id: Date.now(),
+                name: formData.get('name'),
+                email: formData.get('email'),
+                rating: selectedRating,
+                comment: formData.get('comment'),
+                result: formData.get('result') || 'Resultado positivo',
+                date: new Date().toISOString().split('T')[0],
+                approved: false
+            };
+
+            // Send to server
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+            // Send to API
+            fetch('/.netlify/functions/testimonials', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(testimonialData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Also save to localStorage as backup
+                    let pendingTestimonials = JSON.parse(localStorage.getItem('pendingTestimonials')) || [];
+                    pendingTestimonials.push(testimonialData);
+                    localStorage.setItem('pendingTestimonials', JSON.stringify(pendingTestimonials));
+
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    form.style.display = 'none';
+
+                    // Reset form after delay
+                    setTimeout(() => {
+                        form.reset();
+                        selectedRating = 0;
+                        updateStars();
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Depoimento';
+                        successMessage.style.display = 'none';
+                        form.style.display = 'block';
+                    }, 3000);
+                } else {
+                    throw new Error(data.message || 'Erro ao enviar depoimento');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                
+                // Mostrar erro específico
+                errorText.textContent = `Erro ao enviar depoimento: ${error.message}. Salvando localmente como backup.`;
+                errorMessage.style.display = 'block';
+                
+                // Salvar no localStorage como backup
+                let pendingTestimonials = JSON.parse(localStorage.getItem('pendingTestimonials')) || [];
+                pendingTestimonials.push(testimonialData);
+                localStorage.setItem('pendingTestimonials', JSON.stringify(pendingTestimonials));
+                
+                // Mostrar mensagem alternativa após 2 segundos
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                    successMessage.innerHTML = '<i class="fas fa-info-circle"></i> Depoimento salvo localmente! Será enviado quando o servidor estiver disponível.';
+                    successMessage.style.display = 'block';
+                    form.style.display = 'none';
+                    
+                    // Reset form after delay
+                    setTimeout(() => {
+                        form.reset();
+                        selectedRating = 0;
+                        updateStars();
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Depoimento';
+                        successMessage.style.display = 'none';
+                        form.style.display = 'block';
+                    }, 3000);
+                }, 2000);
+            });
+        });
+
+        // Add floating animation
+        document.querySelector('.testimonial-form-container').addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+
+        document.querySelector('.testimonial-form-container').addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    </script>
+</body>
+</html>
