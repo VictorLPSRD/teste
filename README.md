@@ -22,7 +22,7 @@ Site profissional para personal trainer com sistema de depoimentos dinâmicos.
    - Conecte sua conta GitHub
    - Selecione o repositório
    - Configure:
-     - **Build command**: `npm install` (opcional)
+     - **Build command**: *(deixe vazio)* 
      - **Publish directory**: `.` (root)
    - Clique em "Deploy site"
 
@@ -91,8 +91,8 @@ netlify dev
 
 ## 📱 URLs após Deploy
 
-- **Site principal**: `https://SEU-SITE.netlify.app`
-- **API de depoimentos**: `https://SEU-SITE.netlify.app/.netlify/functions/testimonials`
+- **Site principal**: `https://treinador.netlify.app`
+- **API de depoimentos**: `https://treinador.netlify.app/.netlify/functions/testimonials`
 
 ## 🎯 Próximos Passos
 

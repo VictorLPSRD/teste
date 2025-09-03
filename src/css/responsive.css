@@ -101,6 +101,15 @@
     .testimonials-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
+        overflow: visible;
+    }
+
+    .testimonial-card {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none;
+        position: relative;
+        overflow: visible;
     }
 
     /* Footer */
@@ -373,11 +382,23 @@
     .testimonials-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+        overflow-x: visible;
+        overflow-y: visible;
     }
 
     .testimonial-card {
         height: auto;
         min-height: 250px;
+        width: 100%;
+        transform: none !important;
+        opacity: 1 !important;
+        animation: none;
+        position: relative;
+        overflow: visible;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px) !important;
     }
 
     .testimonials-controls {

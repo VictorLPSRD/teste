@@ -1,6 +1,7 @@
 // Testimonials Manager - Sistema avançado de depoimentos
 class TestimonialsManager {
     constructor() {
+        console.log('TestimonialsManager: Inicializando...');
         // Usar configurações do arquivo config.js se disponível
         const config = window.TESTIMONIALS_CONFIG || {};
         
@@ -17,36 +18,51 @@ class TestimonialsManager {
             counter: 'depoimentos de clientes satisfeitos'
         };
         
+        console.log('TestimonialsManager: Configuração carregada', {
+            testimonialsPerPage: this.testimonialsPerPage,
+            loadingDelay: this.loadingDelay
+        });
+        
         this.init();
     }
 
     async init() {
+        console.log('TestimonialsManager: Inicializando sistema...');
         await this.loadTestimonials();
+        console.log('TestimonialsManager: Testimonials carregados:', this.testimonials.length);
         this.setupEventListeners();
         this.displayTestimonials();
         this.updateNavigation();
         this.startAutoRotation();
+        console.log('TestimonialsManager: Sistema inicializado com sucesso!');
     }
 
     async loadTestimonials() {
         try {
+            console.log('TestimonialsManager: Carregando depoimentos...');
             // Tentar carregar da API Netlify primeiro
             let data = null;
             try {
+                console.log('TestimonialsManager: Tentando carregar da API Netlify...');
                 const apiResponse = await fetch('/.netlify/functions/testimonials');
                 if (apiResponse.ok) {
                     data = await apiResponse.json();
-                    console.log('Depoimentos carregados da API Netlify');
+                    console.log('Depoimentos carregados da API Netlify:', data);
                 }
             } catch (apiError) {
-                console.log('API Netlify não disponível, carregando do arquivo JSON');
+                console.log('API Netlify não disponível, tentando arquivo JSON:', apiError);
             }
 
             // Se API não funcionar, carregar do arquivo JSON
             if (!data) {
+                console.log('TestimonialsManager: Carregando do arquivo JSON...');
                 const response = await fetch('comments.json');
-                data = await response.json();
-                console.log('Depoimentos carregados do arquivo JSON');
+                if (response.ok) {
+                    data = await response.json();
+                    console.log('Depoimentos carregados do arquivo JSON:', data);
+                } else {
+                    throw new Error('Não foi possível carregar comments.json');
+                }
             }
 
             // Combinar depoimentos aprovados e pendentes
@@ -79,11 +95,13 @@ class TestimonialsManager {
 
         } catch (error) {
             console.error('Erro ao carregar depoimentos:', error);
+            console.log('TestimonialsManager: Carregando depoimentos de fallback...');
             this.loadFallbackTestimonials();
         }
     }
 
     loadFallbackTestimonials() {
+        console.log('TestimonialsManager: Carregando depoimentos de fallback...');
         // Depoimentos de fallback caso o JSON não carregue
         this.testimonials = [
             {
@@ -93,16 +111,18 @@ class TestimonialsManager {
                 rating: 5,
                 comment: "Em 6 meses perdi 15kg e ganhei muito mais disposição. O Lorenski é um profissional excepcional!",
                 result: "Perdeu 15kg em 6 meses",
-                date: "2025-08-15"
+                date: "2025-08-15",
+                approved: true
             },
             {
                 id: 2,
-                name: "João Santos", 
+                name: "João Santos",
                 avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 comment: "Nunca imaginei que conseguiria ganhar massa muscular. O treino e a dieta foram fundamentais!",
                 result: "Ganhou 8kg de massa muscular",
-                date: "2025-08-20"
+                date: "2025-08-20",
+                approved: true
             },
             {
                 id: 3,
@@ -111,9 +131,11 @@ class TestimonialsManager {
                 rating: 5,
                 comment: "Método incrível! Consegui melhorar minha saúde e autoestima. Recomendo para todos!",
                 result: "Transformação completa",
-                date: "2025-08-25"
+                date: "2025-08-25",
+                approved: true
             }
         ];
+        console.log('TestimonialsManager: Fallback carregado com', this.testimonials.length, 'depoimentos');
     }
 
     shuffleTestimonials() {
@@ -358,6 +380,27 @@ class TestimonialsManager {
         this.updateNavigation();
     }
 }
+
+// Inicialização automática quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', function() {
+    // Aguardar um pouco para garantir que todos os elementos estejam carregados
+    setTimeout(() => {
+        console.log('Auto-inicializando TestimonialsManager...');
+        if (document.getElementById('testimonialsGrid')) {
+            window.testimonialsManager = new TestimonialsManager();
+            console.log('TestimonialsManager inicializado automaticamente!');
+        } else {
+            console.log('Elemento testimonialsGrid não encontrado, aguardando...');
+            // Tentar novamente após mais tempo
+            setTimeout(() => {
+                if (document.getElementById('testimonialsGrid')) {
+                    window.testimonialsManager = new TestimonialsManager();
+                    console.log('TestimonialsManager inicializado com delay!');
+                }
+            }, 1000);
+        }
+    }, 500);
+});
 
 // Inicializar o sistema quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {

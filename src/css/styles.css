@@ -671,6 +671,8 @@ body {
     gap: 2rem;
     margin-bottom: 3rem;
     min-height: 300px;
+    overflow: visible;
+    position: relative;
 }
 
 .testimonial-card {
@@ -683,6 +685,9 @@ body {
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.6s ease forwards;
+    position: relative;
+    overflow: visible;
+    will-change: transform;
 }
 
 .testimonial-card:nth-child(1) {
