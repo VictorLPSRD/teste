@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initMobileMenu();
     addResponsiveFeatures();
+    initMobilePlanCards(); // Nova funcionalidade para cards em mobile
     
     // Note: TestimonialsManager é inicializado pelo próprio testimonials.js
 });
@@ -597,3 +598,104 @@ if ('serviceWorker' in navigator && 'production' === 'production') {
             });
     });
 }
+
+// Mobile Plan Cards Touch Functionality
+function initMobilePlanCards() {
+    // Detectar se é dispositivo touch
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobile = window.innerWidth <= 767;
+    
+    const planCards = document.querySelectorAll('.plan-card');
+    
+    // Função para resetar todos os cards para a frente
+    function resetAllCards() {
+        planCards.forEach(card => {
+            card.classList.remove('touched');
+            const cardBack = card.querySelector('.card-back');
+            if (cardBack) {
+                cardBack.classList.remove('expanded');
+            }
+        });
+    }
+    
+    planCards.forEach(card => {
+        const cardBack = card.querySelector('.card-back');
+        const cardFront = card.querySelector('.card-front');
+        const cardInner = card.querySelector('.card-inner');
+        
+        // Adicionar evento de toque/click para flip do card
+        card.addEventListener('click', function(e) {
+            // Prevenir comportamento padrão se for botão
+            const isButton = e.target.classList.contains('plan-button') || 
+                            e.target.closest('.plan-button');
+            
+            if (!isButton) {
+                e.preventDefault();
+                
+                // Se este card já está virado, apenas volta para frente
+                if (this.classList.contains('touched')) {
+                    this.classList.remove('touched');
+                    const cardBack = this.querySelector('.card-back');
+                    if (cardBack) {
+                        cardBack.classList.remove('expanded');
+                    }
+                } else {
+                    // Resetar todos os outros cards primeiro
+                    resetAllCards();
+                    
+                    // Então virar este card
+                    this.classList.add('touched');
+                    const cardBack = this.querySelector('.card-back');
+                    if (cardBack) {
+                        cardBack.classList.add('expanded');
+                    }
+                }
+            }
+        });
+        
+        // Para dispositivos desktop, manter hover mas com a mesma lógica
+        if (!isTouchDevice) {
+            card.addEventListener('mouseenter', function() {
+                // Resetar todos os outros cards
+                planCards.forEach(otherCard => {
+                    if (otherCard !== this) {
+                        otherCard.classList.remove('touched');
+                        const otherCardBack = otherCard.querySelector('.card-back');
+                        if (otherCardBack) {
+                            otherCardBack.classList.remove('expanded');
+                        }
+                    }
+                });
+                
+                // Virar este card
+                this.classList.add('touched');
+                const cardBack = this.querySelector('.card-back');
+                if (cardBack) {
+                    cardBack.classList.add('expanded');
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('touched');
+                const cardBack = this.querySelector('.card-back');
+                if (cardBack) {
+                    cardBack.classList.remove('expanded');
+                }
+            });
+        }
+    });
+    
+    // Opcional: Fechar card virado quando clicar fora
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.plan-card')) {
+            resetAllCards();
+        }
+    });
+}
+
+// Redimensionamento da janela - reativar funcionalidade mobile se necessário
+window.addEventListener('resize', function() {
+    if (window.innerWidth <= 767) {
+        initMobilePlanCards();
+    }
+});

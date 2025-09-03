@@ -201,7 +201,12 @@
                 <i class="fas fa-exclamation-triangle"></i> <span id="errorText"></span>
             </div>
 
-            <form id="testimonialForm">
+            <form name="depoimentos" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="testimonialForm">
+                <!-- Campo honeypot para spam -->
+                <input type="hidden" name="bot-field" />
+                <input type="hidden" name="form-name" value="depoimentos" />
+                <input type="hidden" name="rating" id="ratingValue" value="5" />
+                
                 <div class="rating-input">
                     <label>Como você avalia nosso trabalho?</label>
                     <div class="star-rating" id="starRating">
